@@ -1,5 +1,5 @@
 import { currencyEquals } from '../token'
-import { Currency, CAVAX } from '../currency'
+import { Currency, CNATIVE } from '../currency'
 import invariant from 'tiny-invariant'
 import JSBI from 'jsbi'
 import _Big from 'big.js'
@@ -18,8 +18,8 @@ export class CurrencyAmount extends Fraction {
    * @param amount ether amount in wei
    * @param chainId
    */
-  public static ether(amount: BigintIsh, chainId: ChainId): CurrencyAmount {
-    return new CurrencyAmount(CAVAX[chainId], amount)
+  public static ether(amount: BigintIsh, chainId: ChainId = ChainId.AVALANCHE): CurrencyAmount {
+    return new CurrencyAmount(CNATIVE[chainId], amount)
   }
 
   // amount _must_ be raw, i.e. in the native representation

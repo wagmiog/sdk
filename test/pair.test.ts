@@ -1,4 +1,4 @@
-import { ChainId, Token, Pair, TokenAmount, WAVAX, Price } from '../src'
+import { ChainId, Token, Pair, TokenAmount, WNATIVE, Price } from '../src'
 
 describe('Pair', () => {
 
@@ -7,7 +7,7 @@ describe('Pair', () => {
 
   describe('constructor', () => {
     it('cannot be used for tokens on different chains', () => {
-      expect(() => new Pair(new TokenAmount(DAS, '100'), new TokenAmount(WAVAX[ChainId.FUJI], '100'), ChainId.FUJI)).toThrow(
+      expect(() => new Pair(new TokenAmount(DAS, '100'), new TokenAmount(WNATIVE[ChainId.FUJI], '100'), ChainId.FUJI)).toThrow(
         'CHAIN_IDS'
       )
     })
@@ -83,7 +83,7 @@ describe('Pair', () => {
     })
 
     it('throws if invalid token', () => {
-      expect(() => pair.priceOf(WAVAX[ChainId.FUJI])).toThrow('TOKEN')
+      expect(() => pair.priceOf(WNATIVE[ChainId.FUJI])).toThrow('TOKEN')
     })
   })
 
@@ -99,7 +99,7 @@ describe('Pair', () => {
 
     it('throws if not in the pair', () => {
       expect(() =>
-        new Pair(new TokenAmount(CON, '101'), new TokenAmount(DAS, '100'), ChainId.FUJI).reserveOf(WAVAX[ChainId.FUJI])
+        new Pair(new TokenAmount(CON, '101'), new TokenAmount(DAS, '100'), ChainId.FUJI).reserveOf(WNATIVE[ChainId.FUJI])
       ).toThrow('TOKEN')
     })
   })
@@ -114,7 +114,7 @@ describe('Pair', () => {
     expect(new Pair(new TokenAmount(DAS, '100'), new TokenAmount(CON, '100'), ChainId.FUJI).involvesToken(DAS)).toEqual(true)
     expect(new Pair(new TokenAmount(DAS, '100'), new TokenAmount(CON, '100'), ChainId.FUJI).involvesToken(CON)).toEqual(true)
     expect(
-      new Pair(new TokenAmount(DAS, '100'), new TokenAmount(CON, '100'), ChainId.FUJI).involvesToken(WAVAX[ChainId.FUJI])
+      new Pair(new TokenAmount(DAS, '100'), new TokenAmount(CON, '100'), ChainId.FUJI).involvesToken(WNATIVE[ChainId.FUJI])
     ).toEqual(false)
   })
 })

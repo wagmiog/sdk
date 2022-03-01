@@ -17,7 +17,7 @@ export class Currency {
    * The only instance of the base class `Currency`.
    */
 
-  //$ public static readonly CAVAX: Currency = new Currency(18, 'AVAX', 'Avalanche')
+  //$ public static readonly CNATIVE: Currency = new Currency(18, 'AVAX', 'Avalanche')
 
   public static readonly CURRENCY = {
     [ChainId.FUJI]: new Currency(18, 'AVAX', 'Avalanche'),
@@ -40,6 +40,6 @@ export class Currency {
   }
 }
 
-//$ const CAVAX = Currency.CAVAX
-const CAVAX = Currency.CURRENCY
-export { CAVAX }
+//$ const CNATIVE = Currency.CNATIVE
+const CNATIVE = Currency.CURRENCY
+export { CNATIVE }

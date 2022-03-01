@@ -1,7 +1,7 @@
 import JSBI from 'jsbi'
 import {
   ChainId,
-  CAVAX,
+  CNATIVE,
   CurrencyAmount,
   Pair,
   Percent,
@@ -10,7 +10,7 @@ import {
   TokenAmount,
   Trade,
   TradeType,
-  WAVAX
+  WNATIVE
 } from '../src'
 
 describe('Trade', () => {
@@ -26,7 +26,7 @@ describe('Trade', () => {
   const pair_1_3 = new Pair(new TokenAmount(token1, JSBI.BigInt(1200)), new TokenAmount(token3, JSBI.BigInt(1300)), ChainId.AVALANCHE)
 
   const pair_weth_0 = new Pair(
-    new TokenAmount(WAVAX[ChainId.AVALANCHE], JSBI.BigInt(1000)),
+    new TokenAmount(WNATIVE[ChainId.AVALANCHE], JSBI.BigInt(1000)),
     new TokenAmount(token0, JSBI.BigInt(1000)), ChainId.AVALANCHE
   )
 
@@ -34,40 +34,40 @@ describe('Trade', () => {
 
   it('can be constructed with ETHER as input', () => {
     const trade = new Trade(
-      new Route([pair_weth_0], CAVAX),
+      new Route([pair_weth_0], CNATIVE),
       CurrencyAmount.ether(JSBI.BigInt(100)),
       TradeType.EXACT_INPUT
     )
-    expect(trade.inputAmount.currency).toEqual(CAVAX)
+    expect(trade.inputAmount.currency).toEqual(CNATIVE)
     expect(trade.outputAmount.currency).toEqual(token0)
   })
   it('can be constructed with ETHER as input for exact output', () => {
     const trade = new Trade(
-      new Route([pair_weth_0], CAVAX, token0),
+      new Route([pair_weth_0], CNATIVE, token0),
       new TokenAmount(token0, JSBI.BigInt(100)),
       TradeType.EXACT_OUTPUT
     )
-    expect(trade.inputAmount.currency).toEqual(CAVAX)
+    expect(trade.inputAmount.currency).toEqual(CNATIVE)
     expect(trade.outputAmount.currency).toEqual(token0)
   })
 
   it('can be constructed with ETHER as output', () => {
     const trade = new Trade(
-      new Route([pair_weth_0], token0, CAVAX),
+      new Route([pair_weth_0], token0, CNATIVE),
       CurrencyAmount.ether(JSBI.BigInt(100)),
       TradeType.EXACT_OUTPUT
     )
     expect(trade.inputAmount.currency).toEqual(token0)
-    expect(trade.outputAmount.currency).toEqual(CAVAX)
+    expect(trade.outputAmount.currency).toEqual(CNATIVE)
   })
   it('can be constructed with ETHER as output for exact input', () => {
     const trade = new Trade(
-      new Route([pair_weth_0], token0, CAVAX),
+      new Route([pair_weth_0], token0, CNATIVE),
       new TokenAmount(token0, JSBI.BigInt(100)),
       TradeType.EXACT_INPUT
     )
     expect(trade.inputAmount.currency).toEqual(token0)
-    expect(trade.outputAmount.currency).toEqual(CAVAX)
+    expect(trade.outputAmount.currency).toEqual(CNATIVE)
   })
 
   describe('#bestTradeExactIn', () => {
@@ -154,26 +154,26 @@ describe('Trade', () => {
         token3
       )
       expect(result).toHaveLength(2)
-      expect(result[0].inputAmount.currency).toEqual(CAVAX)
-      expect(result[0].route.path).toEqual([WAVAX[ChainId.AVALANCHE], token0, token1, token3])
+      expect(result[0].inputAmount.currency).toEqual(CNATIVE)
+      expect(result[0].route.path).toEqual([WNATIVE[ChainId.AVALANCHE], token0, token1, token3])
       expect(result[0].outputAmount.currency).toEqual(token3)
-      expect(result[1].inputAmount.currency).toEqual(CAVAX)
-      expect(result[1].route.path).toEqual([WAVAX[ChainId.AVALANCHE], token0, token3])
+      expect(result[1].inputAmount.currency).toEqual(CNATIVE)
+      expect(result[1].route.path).toEqual([WNATIVE[ChainId.AVALANCHE], token0, token3])
       expect(result[1].outputAmount.currency).toEqual(token3)
     })
     it('works for ETHER currency output', () => {
       const result = Trade.bestTradeExactIn(
         [pair_weth_0, pair_0_1, pair_0_3, pair_1_3],
         new TokenAmount(token3, JSBI.BigInt(100)),
-        CAVAX
+        CNATIVE
       )
       expect(result).toHaveLength(2)
       expect(result[0].inputAmount.currency).toEqual(token3)
-      expect(result[0].route.path).toEqual([token3, token0, WAVAX[ChainId.AVALANCHE]])
-      expect(result[0].outputAmount.currency).toEqual(CAVAX)
+      expect(result[0].route.path).toEqual([token3, token0, WNATIVE[ChainId.AVALANCHE]])
+      expect(result[0].outputAmount.currency).toEqual(CNATIVE)
       expect(result[1].inputAmount.currency).toEqual(token3)
-      expect(result[1].route.path).toEqual([token3, token1, token0, WAVAX[ChainId.AVALANCHE]])
-      expect(result[1].outputAmount.currency).toEqual(CAVAX)
+      expect(result[1].route.path).toEqual([token3, token1, token0, WNATIVE[ChainId.AVALANCHE]])
+      expect(result[1].outputAmount.currency).toEqual(CNATIVE)
     })
   })
 
@@ -375,15 +375,15 @@ describe('Trade', () => {
     it('works for ETHER currency input', () => {
       const result = Trade.bestTradeExactOut(
         [pair_weth_0, pair_0_1, pair_0_3, pair_1_3],
-        CAVAX,
+        CNATIVE,
         new TokenAmount(token3, JSBI.BigInt(100))
       )
       expect(result).toHaveLength(2)
-      expect(result[0].inputAmount.currency).toEqual(CAVAX)
-      expect(result[0].route.path).toEqual([WAVAX[ChainId.AVALANCHE], token0, token1, token3])
+      expect(result[0].inputAmount.currency).toEqual(CNATIVE)
+      expect(result[0].route.path).toEqual([WNATIVE[ChainId.AVALANCHE], token0, token1, token3])
       expect(result[0].outputAmount.currency).toEqual(token3)
-      expect(result[1].inputAmount.currency).toEqual(CAVAX)
-      expect(result[1].route.path).toEqual([WAVAX[ChainId.AVALANCHE], token0, token3])
+      expect(result[1].inputAmount.currency).toEqual(CNATIVE)
+      expect(result[1].route.path).toEqual([WNATIVE[ChainId.AVALANCHE], token0, token3])
       expect(result[1].outputAmount.currency).toEqual(token3)
     })
     it('works for ETHER currency output', () => {
@@ -394,11 +394,11 @@ describe('Trade', () => {
       )
       expect(result).toHaveLength(2)
       expect(result[0].inputAmount.currency).toEqual(token3)
-      expect(result[0].route.path).toEqual([token3, token0, WAVAX[ChainId.AVALANCHE]])
-      expect(result[0].outputAmount.currency).toEqual(CAVAX)
+      expect(result[0].route.path).toEqual([token3, token0, WNATIVE[ChainId.AVALANCHE]])
+      expect(result[0].outputAmount.currency).toEqual(CNATIVE)
       expect(result[1].inputAmount.currency).toEqual(token3)
-      expect(result[1].route.path).toEqual([token3, token1, token0, WAVAX[ChainId.AVALANCHE]])
-      expect(result[1].outputAmount.currency).toEqual(CAVAX)
+      expect(result[1].route.path).toEqual([token3, token1, token0, WNATIVE[ChainId.AVALANCHE]])
+      expect(result[1].outputAmount.currency).toEqual(CNATIVE)
     })
   })
 })

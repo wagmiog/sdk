@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant'
 
 import { ChainId, ONE, TradeType, ZERO } from '../constants'
 import { sortedInsert } from '../utils'
-import { Currency, CAVAX } from './currency'
+import { Currency, CNATIVE } from './currency'
 import { CurrencyAmount } from './fractions/currencyAmount'
 import { Fraction } from './fractions/fraction'
 import { Percent } from './fractions/percent'
@@ -10,7 +10,7 @@ import { Price } from './fractions/price'
 import { TokenAmount } from './fractions/tokenAmount'
 import { Pair } from './pair'
 import { Route } from './route'
-import { currencyEquals, Token, WAVAX } from './token'
+import { currencyEquals, Token, WNATIVE } from './token'
 
 /**
  * Returns the percent difference between the mid price and the execution price, i.e. price impact.
@@ -87,15 +87,15 @@ export interface BestTradeOptions {
  * In other words, if the currency is ETHER, returns the WETH token amount for the given chain. Otherwise, returns
  * the input currency amount.
  */
-function wrappedAmount(currencyAmount: CurrencyAmount, chainId: ChainId): TokenAmount {
+function wrappedAmount(currencyAmount: CurrencyAmount, chainId: ChainId = ChainId.AVALANCHE): TokenAmount {
   if (currencyAmount instanceof TokenAmount) return currencyAmount
-  if (currencyAmount.currency === CAVAX[chainId]) return new TokenAmount(WAVAX[chainId], currencyAmount.raw)
+  if (currencyAmount.currency === CNATIVE[chainId]) return new TokenAmount(WNATIVE[chainId], currencyAmount.raw)
   invariant(false, 'CURRENCY')
 }
 
-function wrappedCurrency(currency: Currency, chainId: ChainId): Token {
+function wrappedCurrency(currency: Currency, chainId: ChainId = ChainId.AVALANCHE): Token {
   if (currency instanceof Token) return currency
-  if (currency === CAVAX[chainId]) return WAVAX[chainId]
+  if (currency === CNATIVE[chainId]) return WNATIVE[chainId]
   invariant(false, 'CURRENCY')
 }
 
@@ -133,14 +133,14 @@ export class Trade {
    */
   public readonly priceImpact: Percent
 
-  public readonly chainId: ChainId
+  public readonly chainId: ChainId = ChainId.AVALANCHE
 
   /**
    * Constructs an exact in trade with the given amount in and route
    * @param route route of the exact in trade
    * @param amountIn the amount being passed in
    */
-  public static exactIn(route: Route, amountIn: CurrencyAmount, chainId: ChainId): Trade {
+  public static exactIn(route: Route, amountIn: CurrencyAmount, chainId: ChainId = ChainId.AVALANCHE): Trade {
     return new Trade(route, amountIn, TradeType.EXACT_INPUT, chainId)
   }
 
@@ -149,11 +149,11 @@ export class Trade {
    * @param route route of the exact out trade
    * @param amountOut the amount returned by the trade
    */
-  public static exactOut(route: Route, amountOut: CurrencyAmount, chainId: ChainId): Trade {
+  public static exactOut(route: Route, amountOut: CurrencyAmount, chainId: ChainId = ChainId.AVALANCHE): Trade {
     return new Trade(route, amountOut, TradeType.EXACT_OUTPUT, chainId)
   }
 
-  public constructor(route: Route, amount: CurrencyAmount, tradeType: TradeType, chainId: ChainId) {
+  public constructor(route: Route, amount: CurrencyAmount, tradeType: TradeType, chainId: ChainId = ChainId.AVALANCHE) {
     const amounts: TokenAmount[] = new Array(route.path.length)
     const nextPairs: Pair[] = new Array(route.pairs.length)
     if (tradeType === TradeType.EXACT_INPUT) {
@@ -181,13 +181,13 @@ export class Trade {
     this.inputAmount =
       tradeType === TradeType.EXACT_INPUT
         ? amount
-        : route.input === CAVAX[chainId]
+        : route.input === CNATIVE[chainId]
         ? CurrencyAmount.ether(amounts[0].raw, chainId)
         : amounts[0]
     this.outputAmount =
       tradeType === TradeType.EXACT_OUTPUT
         ? amount
-        : route.output === CAVAX[chainId]
+        : route.output === CNATIVE[chainId]
         ? CurrencyAmount.ether(amounts[amounts.length - 1].raw, chainId)
         : amounts[amounts.length - 1]
     this.executionPrice = new Price(
@@ -205,7 +205,7 @@ export class Trade {
    * Get the minimum amount that must be received from this trade for the given slippage tolerance
    * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
    */
-  public minimumAmountOut(slippageTolerance: Percent, chainId: ChainId): CurrencyAmount {
+  public minimumAmountOut(slippageTolerance: Percent, chainId: ChainId = ChainId.AVALANCHE): CurrencyAmount {
     invariant(!slippageTolerance.lessThan(ZERO), 'SLIPPAGE_TOLERANCE')
     if (this.tradeType === TradeType.EXACT_OUTPUT) {
       return this.outputAmount
@@ -224,7 +224,7 @@ export class Trade {
    * Get the maximum amount in that can be spent via this trade for the given slippage tolerance
    * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
    */
-  public maximumAmountIn(slippageTolerance: Percent, chainId: ChainId): CurrencyAmount {
+  public maximumAmountIn(slippageTolerance: Percent, chainId: ChainId = ChainId.AVALANCHE): CurrencyAmount {
     invariant(!slippageTolerance.lessThan(ZERO), 'SLIPPAGE_TOLERANCE')
     if (this.tradeType === TradeType.EXACT_INPUT) {
       return this.inputAmount
