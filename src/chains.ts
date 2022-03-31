@@ -43,6 +43,7 @@ export interface Chain {
     fee_collector?: string;
     staking?: StakingContract[];
   }
+  
 }
 
 export const ETHEREUM_MAINNET: Chain = {
