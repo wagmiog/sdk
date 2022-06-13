@@ -950,6 +950,7 @@ export const WAGMI_FUJI_SUBNET: Chain = {
   symbol: 'WGMI',
   mainnet: false,
   logo: 'https://raw.githubusercontent.com/pangolindex/sdk/master/src/images/chains/wgmi.png',
+  png_symbol: 'wagmiPNG',
   pangolin_is_live: true,
   tracked_by_debank: false,
   supported_by_gelato: false,
